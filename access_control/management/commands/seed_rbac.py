@@ -31,6 +31,7 @@ class Command(BaseCommand):
             ("Remove Roles", "role.remove"),
 
             ("View Permissions", "permission.view"),
+            ("Create Permissions", "permission.create"),
             ("Assign Permissions", "permission.assign"),
 
             ("View Audits", "audit.view"),
@@ -136,6 +137,7 @@ class Command(BaseCommand):
                 "role.remove",
 
                 "permission.view",
+                "permission.create",
                 "permission.assign",
 
                 "audit.view",
