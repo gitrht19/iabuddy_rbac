@@ -37,3 +37,35 @@ class AssignRoleSerializer(serializers.Serializer):
             )
 
         return value
+
+class RemoveRoleSerializer(serializers.Serializer):
+
+    user_id = serializers.UUIDField()
+
+    role_id = serializers.IntegerField()
+
+    def validate_user_id(self, value):
+
+        if not User.objects.filter(
+            account_id=value
+        ).exists():
+            raise serializers.ValidationError(
+                "User not found."
+            )
+
+        return value
+
+    def validate_role_id(self, value):
+
+        try:
+            Role.objects.get(
+                id=value,
+                is_active=True
+            )
+        except Role.DoesNotExist:
+            raise serializers.ValidationError(
+                "Active role not found."
+            )
+
+        return value
+    

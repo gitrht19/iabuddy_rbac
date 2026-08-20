@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from .models import Role, UserRole
 
 def assign_role_to_user(user, role, assigned_by=None):
@@ -22,3 +22,20 @@ def assign_role_to_user(user, role, assigned_by=None):
         )
 
     return user_role
+
+
+def remove_role_from_user(user, role):
+
+    try:
+        user_role = UserRole.objects.get(
+            user=user,
+            role=role
+        )
+    except UserRole.DoesNotExist:
+        raise ValidationError(
+            "This role is not assigned to the user."
+        )
+
+    user_role.delete()
+
+    return True
