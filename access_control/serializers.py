@@ -255,4 +255,10 @@ class PermissionListSerializer(serializers.ModelSerializer):
             "code",
             "description",
         ]
-        
+
+
+class CurrentUserPermissionsSerializer(serializers.Serializer):
+
+    permissions = serializers.ListField(
+        child=serializers.CharField()
+    )

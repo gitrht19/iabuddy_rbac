@@ -150,3 +150,22 @@ def get_all_permissions():
     return Permission.objects.filter(
         is_active=True
     ).order_by("id")
+
+def get_user_permissions(user):
+
+    permissions = (
+        Permission.objects
+        .filter(
+            role_permissions__role__user_roles__user=user,
+            role_permissions__role__is_active=True,
+            is_active=True,
+        )
+        .values_list(
+            "code",
+            flat=True,
+        )
+        .distinct()
+        .order_by("code")
+    )
+
+    return list(permissions)

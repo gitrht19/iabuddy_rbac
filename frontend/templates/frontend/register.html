@@ -1,0 +1,146 @@
+{% extends "frontend/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Register | IABuddy RBAC
+{% endblock %}
+
+{% block page_title %}
+    Register
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <div class="text-center mb-4">
+
+                        <h4 class="mb-1">
+                            Create Account
+                        </h4>
+
+                        <p class="text-muted mb-0">
+                            Register your account
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        id="register-message"
+                        class="alert d-none"
+                        role="alert">
+                    </div>
+
+
+                    <form id="register-form">
+
+                        <div class="mb-3">
+
+                            <label
+                                for="full-name"
+                                class="form-label">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="full-name"
+                                class="form-control"
+                                autocomplete="name"
+                                required>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label
+                                for="email"
+                                class="form-label">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-control"
+                                autocomplete="email"
+                                required>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label
+                                for="password"
+                                class="form-label">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                class="form-control"
+                                autocomplete="new-password"
+                                required>
+
+                        </div>
+
+
+                        <div class="d-grid">
+
+                            <button
+                                type="submit"
+                                id="register-button"
+                                class="btn btn-primary">
+
+                                Register
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <div class="text-center mt-3">
+
+                        <span class="text-muted">
+                            Already have an account?
+                        </span>
+
+                        <a href="/login/">
+                            Login
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'frontend/js/register.js' %}"></script>
+
+{% endblock %}

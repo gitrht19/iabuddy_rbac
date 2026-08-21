@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import OTPVerification
-from .serializers import RegisterSerializer,VerifyOTPSerializer,ResendOTPSerializer,LoginSerializer,LogoutSerializer,ForgotPasswordSerializer,VerifyResetOTPSerializer,ResetPasswordSerializer
+from .serializers import ProfileSerializer, RegisterSerializer,VerifyOTPSerializer,ResendOTPSerializer,LoginSerializer,LogoutSerializer,ForgotPasswordSerializer,VerifyResetOTPSerializer,ResetPasswordSerializer
 from .services import create_otp,verify_user_otp
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -394,5 +394,40 @@ class ResetPasswordView(APIView):
             {
                 "message": "Password reset successfully."
             },
+            status=status.HTTP_200_OK
+        )
+
+class ProfileView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        serializer = ProfileSerializer(
+            request.user
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
+    def patch(self, request):
+
+        serializer = ProfileSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        return Response(
+            serializer.data,
             status=status.HTTP_200_OK
         )
