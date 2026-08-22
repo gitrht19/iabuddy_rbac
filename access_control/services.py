@@ -1,5 +1,5 @@
 from rest_framework.exceptions import ValidationError
-from .models import Permission, Role, RolePermission, UserRole
+from .models import Permission, Role, RolePermission, UserRole, Module
 
 def assign_role_to_user(user, role, assigned_by=None):
 
@@ -153,6 +153,21 @@ def get_all_permissions():
 
 def get_user_permissions(user):
 
+    if user.is_superuser:
+
+        return list(
+            Permission.objects
+            .filter(
+                is_active=True
+            )
+            .values_list(
+                "code",
+                flat=True
+            )
+            .order_by("code")
+        )
+
+
     permissions = (
         Permission.objects
         .filter(
@@ -168,4 +183,56 @@ def get_user_permissions(user):
         .order_by("code")
     )
 
-    return list(permissions)
+    return list(
+        permissions
+    )
+
+def get_user_modules(user):
+
+    modules = (
+        Module.objects
+        .filter(
+            is_active=True,
+            module_permissions__permission__is_active=True,
+        )
+        .distinct()
+        .order_by("id")
+    )
+
+    user_permissions = set(
+        get_user_permissions(user)
+    )
+
+    module_data = []
+
+    for module in modules:
+
+        required_permissions = list(
+            module.module_permissions
+            .filter(
+                permission__is_active=True
+            )
+            .values_list(
+                "permission__code",
+                flat=True
+            )
+        )
+
+        has_access = any(
+            permission_code in user_permissions
+            for permission_code in required_permissions
+        )
+
+        module_data.append(
+            {
+                "id": module.id,
+                "name": module.name,
+                "code": module.code,
+                "url": module.url,
+                "icon": module.icon,
+                "description": module.description,
+                "has_access": has_access,
+            }
+        )
+
+    return module_data

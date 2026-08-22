@@ -49,3 +49,27 @@ def ProfilePageView(request):
         request,
         "frontend/profile.html"
     )
+
+def UsersPageView(request):
+    return render(
+        request,
+        "frontend/users.html"
+    )
+
+def RolesPageView(request):
+    return render(
+        request,
+        "frontend/roles.html"
+    )
+
+def PermissionsPageView(request):
+    return render(
+        request,
+        "frontend/permissions.html"
+    )
+
+def AuditPageView(request):
+    return render(
+        request,
+        "frontend/audit.html"
+    )

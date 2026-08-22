@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .models import Permission, Role
 from .permissions import HasPermission
 from .serializers import AssignPermissionSerializer, AssignRoleSerializer, CreatePermissionSerializer, CreateRoleSerializer, CurrentUserPermissionsSerializer, ListUserRolesSerializer, PermissionListSerializer, RemovePermissionSerializer,RemoveRoleSerializer, RoleListSerializer, RolePermissionListSerializer, UpdateRoleSerializer, UserRoleResponseSerializer
-from .services import assign_permission_to_role, assign_role_to_user, create_permission, create_role, get_all_permissions, get_all_roles, get_role_permissions, get_user_permissions, get_user_roles, remove_permission_from_role,remove_role_from_user, update_role
+from .services import assign_permission_to_role, assign_role_to_user, create_permission, create_role, get_all_permissions, get_all_roles, get_role_permissions, get_user_modules, get_user_permissions, get_user_roles, remove_permission_from_role,remove_role_from_user, update_role
 from django.core.exceptions import ValidationError
 
 User = get_user_model()
@@ -558,3 +558,23 @@ class CurrentUserPermissionsView(APIView):
         return Response(
             serializer.data
         )
+
+class CurrentUserModulesView(APIView):
+
+    permission_classes = [
+        IsAuthenticated
+    ]
+
+    def get(self, request):
+
+        modules = get_user_modules(
+            request.user
+        )
+
+        return Response(
+            {
+                "modules": modules
+            },
+            status=status.HTTP_200_OK
+        )
+    

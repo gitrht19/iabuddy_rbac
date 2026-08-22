@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ForgotPasswordPageView, ProfilePageView, RegisterPageView, ResetPasswordPageView,VerifyOTPPageView, VerifyResetOTPPageView, dashboard,login_page
+from .views import AuditPageView, ForgotPasswordPageView, PermissionsPageView, ProfilePageView, RegisterPageView, ResetPasswordPageView, RolesPageView, UsersPageView,VerifyOTPPageView, VerifyResetOTPPageView, dashboard,login_page
 
 
 urlpatterns = [
@@ -52,4 +52,27 @@ urlpatterns = [
         ProfilePageView,
         name="profile"
     ),
+    path(
+        "users/",
+        UsersPageView,
+        name="users"
+    ),
+
+    path(
+        "roles/",
+        RolesPageView,
+        name="roles"
+    ),
+    
+    path(
+        "permissions/",
+        PermissionsPageView,
+        name="permissions"
+    ),
+
+    path(
+        "audit/",
+        AuditPageView,
+        name="audit"
+    )
 ]

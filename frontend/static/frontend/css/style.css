@@ -1,0 +1,4 @@
+#sidebar-menu .nav-link.active {
+    background-color: #e9ecef;
+    font-weight: 600;
+}

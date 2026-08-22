@@ -59,3 +59,83 @@ class RolePermission(models.Model):
 
     def __str__(self):
         return f"{self.role.name} - {self.permission.code}"
+
+class Module(models.Model):
+
+    name = models.CharField(
+        max_length=100,
+        unique=True
+    )
+
+    code = models.CharField(
+        max_length=100,
+        unique=True
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    url = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    icon = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+
+        return self.name
+
+class ModulePermission(models.Model):
+
+    module = models.ForeignKey(
+        Module,
+        on_delete=models.CASCADE,
+        related_name="module_permissions"
+    )
+
+    permission = models.ForeignKey(
+        Permission,
+        on_delete=models.CASCADE,
+        related_name="module_permissions"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "module",
+                    "permission"
+                ],
+                name="unique_module_permission"
+            )
+        ]
+
+    def __str__(self):
+
+        return (
+            f"{self.module.name} - "
+            f"{self.permission.code}"
+        )
+    

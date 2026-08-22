@@ -1,5 +1,6 @@
 (function () {
 
+
     function isAuthenticated() {
 
         const accessToken =

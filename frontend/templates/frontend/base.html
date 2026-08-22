@@ -38,7 +38,12 @@
     {% include "frontend/navbar.html" %}
 
 
-    <main class="container-fluid py-4">
+    {% include "frontend/sidebar.html" %}
+
+
+    <main
+        id="main-content"
+        class="container-fluid py-4">
 
         <div class="container">
 
@@ -66,17 +71,28 @@
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
+
     <script
         src="{% static 'frontend/js/auth.js' %}">
     </script>
+
 
     <script
         src="{% static 'frontend/js/navbar.js' %}">
     </script>
 
 
+    <script
+        src="{% static 'frontend/js/permission.js' %}">
+    </script>
+    
+    <script
+        src="{% static 'frontend/js/sidebar.js' %}">
+    </script>
+
     {% block extra_js %}
     {% endblock %}
+
 
 </body>
 

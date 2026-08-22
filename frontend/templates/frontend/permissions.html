@@ -1,0 +1,257 @@
+{% extends "frontend/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Permissions | IABuddy RBAC
+{% endblock %}
+
+{% block page_title %}
+    Permissions
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div
+        id="permissions-message"
+        class="alert d-none"
+        role="alert">
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <div
+                class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h5 class="mb-1">
+                        Permissions
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Manage application permissions.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="create-permission-button"
+                    class="btn btn-primary">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Create Permission
+
+                </button>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-hover align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Code
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="permissions-table-body">
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="text-center text-muted py-4">
+
+                                Loading permissions...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Create Permission Modal -->
+
+<div
+    class="modal fade"
+    id="permissionModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title">
+
+                    Create Permission
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div
+                    id="permission-modal-message"
+                    class="alert d-none"
+                    role="alert">
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="permission-name"
+                        class="form-label">
+
+                        Permission Name
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="permission-name"
+                        class="form-control"
+                        maxlength="100"
+                        required>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="permission-code"
+                        class="form-label">
+
+                        Permission Code
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="permission-code"
+                        class="form-control"
+                        maxlength="100"
+                        required>
+
+                    <div class="form-text">
+                        Example: report.view
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="permission-description"
+                        class="form-label">
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        id="permission-description"
+                        class="form-control"
+                        rows="4">
+                    </textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="save-permission-button"
+                    class="btn btn-primary">
+
+                    Create Permission
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'frontend/js/permission.js' %}">
+</script>
+
+{% endblock %}

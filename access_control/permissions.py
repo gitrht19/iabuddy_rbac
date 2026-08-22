@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-from .models import UserRole, RolePermission
+from .models import RolePermission
 
 
 class HasPermission(BasePermission):
@@ -11,6 +11,9 @@ class HasPermission(BasePermission):
 
         if not request.user.is_authenticated:
             return False
+        
+        if request.user.is_superuser:
+            return True
 
         permission_code = getattr(
             view,
