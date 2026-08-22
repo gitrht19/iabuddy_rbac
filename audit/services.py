@@ -133,10 +133,12 @@ def review_audit(
         )
 
     audit.reviewed_by = reviewer
+    audit.status = Audit.Status.REVIEWED
 
     audit.save(
         update_fields=[
             "reviewed_by",
+            "status",
             "updated_at",
         ]
     )
@@ -149,10 +151,10 @@ def approve_audit(
     approver
 ):
 
-    if audit.status != Audit.Status.UNDER_REVIEW:
+    if audit.status != Audit.Status.REVIEWED:
 
         raise ValidationError(
-            "Only audits under review can be approved."
+            "Only reviewed audits can be approved."
         )
 
     audit.approved_by = approver

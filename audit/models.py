@@ -18,9 +18,20 @@ class Audit(models.Model):
             "Under Review"
         )
 
-        APPROVED = "approved", "Approved"
+        REVIEWED = (
+            "reviewed",
+            "Reviewed"
+        )
 
-        REJECTED = "rejected", "Rejected"
+        APPROVED = (
+            "approved",
+            "Approved"
+        )
+
+        REJECTED = (
+            "rejected",
+            "Rejected"
+        )
 
 
     title = models.CharField(

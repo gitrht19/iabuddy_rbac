@@ -131,6 +131,7 @@ const AuditManager = {
                         () => ({})
                     );
 
+
             this.showMessage(
                 result.message ||
                 "Unable to load audits.",
@@ -339,19 +340,15 @@ const AuditManager = {
 
             in_progress: "bg-primary",
 
-            under_review: "bg-warning text-dark",
+            under_review: "bg-warning",
+
+            reviewed: "bg-info",
 
             approved: "bg-success",
 
             rejected: "bg-danger"
 
         };
-
-
-        badge.classList.add(
-            statusMap[status] ||
-            "bg-secondary"
-        );
 
 
         const labelMap = {
@@ -362,11 +359,19 @@ const AuditManager = {
 
             under_review: "Under Review",
 
+            reviewed: "Reviewed",
+
             approved: "Approved",
 
             rejected: "Rejected"
 
         };
+
+
+        badge.classList.add(
+            statusMap[status] ||
+            "bg-secondary"
+        );
 
 
         badge.textContent =
@@ -396,6 +401,10 @@ const AuditManager = {
         );
 
 
+        /*
+            View
+        */
+
         if (
             PermissionManager.has(
                 "audit.view"
@@ -423,6 +432,10 @@ const AuditManager = {
 
         }
 
+
+        /*
+            Auditor / Update Actions
+        */
 
         if (
             PermissionManager.has(
@@ -465,12 +478,17 @@ const AuditManager = {
                 editButton
             );
 
+
             container.appendChild(
                 startButton
             );
 
         }
 
+
+        /*
+            Submit For Review
+        */
 
         if (
             PermissionManager.has(
@@ -500,6 +518,10 @@ const AuditManager = {
 
         }
 
+
+        /*
+            Reviewer Actions
+        */
 
         if (
             PermissionManager.has(
@@ -542,6 +564,7 @@ const AuditManager = {
                 reviewButton
             );
 
+
             container.appendChild(
                 rejectButton
             );
@@ -549,11 +572,15 @@ const AuditManager = {
         }
 
 
+        /*
+            Approver Actions
+        */
+
         if (
             PermissionManager.has(
                 "audit.approve"
             ) &&
-            audit.status === "under_review"
+            audit.status === "reviewed"
         ) {
 
             const approveButton =
@@ -571,8 +598,28 @@ const AuditManager = {
                 );
 
 
+            const rejectButton =
+                this.createActionButton(
+                    "Reject",
+                    "btn-outline-danger",
+                    "bi-x-circle",
+                    () => {
+
+                        this.rejectAudit(
+                            audit.id
+                        );
+
+                    }
+                );
+
+
             container.appendChild(
                 approveButton
+            );
+
+
+            container.appendChild(
+                rejectButton
             );
 
         }

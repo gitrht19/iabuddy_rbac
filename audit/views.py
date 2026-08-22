@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 
+from access_control.models import RolePermission
 from access_control.permissions import HasPermission
 from access_control.services import get_users_by_permission
 
@@ -330,7 +331,7 @@ class RejectAuditView(APIView):
         HasPermission,
     ]
 
-    required_permission = "audit.review"
+    required_permission = "audit.reject"
 
     def post(self, request, audit_id):
 
