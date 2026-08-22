@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AssignPermissionToRoleView, AssignRoleView, CreatePermissionView, CreateRoleView, CurrentUserModulesView, CurrentUserPermissionsView, ListPermissionsView, ListRolePermissionsView, ListRolesView, ListUserRolesView, RemovePermissionFromRoleView, RemoveRoleView, UpdateRoleView, UserListView
+from .views import AssignPermissionToRoleView, AssignRoleView, CreatePermissionView, CreateRoleView, CurrentUserModulesView, CurrentUserPermissionsView, ListPermissionsView, ListRolePermissionsView, ListRolesView, ListUserRolesView, PermissionUsersView, RemovePermissionFromRoleView, RemoveRoleView, RoleUsersView, UpdateRoleView, UserListView
 
 
 urlpatterns = [
@@ -22,4 +22,6 @@ urlpatterns = [
     path("users/",UserListView.as_view(),name="user-list"),
 
     path("user/modules/",CurrentUserModulesView.as_view(),name="current-user-modules"),
+    path("roles/<int:role_id>/users/",RoleUsersView.as_view(),name="role-users"),
+    path("users/by-permission/",PermissionUsersView.as_view(),name="users-by-permission",),
 ]

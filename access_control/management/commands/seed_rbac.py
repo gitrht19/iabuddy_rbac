@@ -37,6 +37,7 @@ class Command(BaseCommand):
             ("View Audits", "audit.view"),
             ("Create Audits", "audit.create"),
             ("Update Audits", "audit.update"),
+            ("Assign Audits", "audit.assign"),
             ("Review Audits", "audit.review"),
             ("Approve Audits", "audit.approve"),
             ("Export Audits", "audit.export"),
@@ -151,6 +152,7 @@ class Command(BaseCommand):
                 "audit.view",
                 "audit.create",
                 "audit.update",
+                "audit.assign",
                 "audit.review",
                 "audit.approve",
                 "audit.export",
@@ -170,6 +172,7 @@ class Command(BaseCommand):
                 "audit.view",
                 "audit.create",
                 "audit.update",
+                "audit.assign",
             ],
         }
 

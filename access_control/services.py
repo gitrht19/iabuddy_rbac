@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from .models import Permission, Role, RolePermission, UserRole, Module
+User = get_user_model()
 
 def assign_role_to_user(user, role, assigned_by=None):
 
@@ -236,3 +238,32 @@ def get_user_modules(user):
         )
 
     return module_data
+
+
+def get_users_by_role(role):
+
+    return User.objects.filter(
+        is_active=True,
+        user_roles__role=role,
+        user_roles__role__is_active=True,
+    ).distinct()
+
+
+def get_users_by_permission(permission_code):
+
+    return User.objects.filter(
+        is_active=True,
+        user_roles__role__role_permissions__permission__code=permission_code,
+        user_roles__role__is_active=True,
+        user_roles__role__role_permissions__permission__is_active=True,
+    ).distinct()
+
+
+def get_role_by_name(
+    role_name
+):
+
+    return Role.objects.filter(
+        name__iexact=role_name,
+        is_active=True,
+    ).first()

@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .models import Permission, Role
 from .permissions import HasPermission
 from .serializers import AssignPermissionSerializer, AssignRoleSerializer, CreatePermissionSerializer, CreateRoleSerializer, CurrentUserPermissionsSerializer, ListUserRolesSerializer, PermissionListSerializer, RemovePermissionSerializer,RemoveRoleSerializer, RoleListSerializer, RolePermissionListSerializer, UpdateRoleSerializer, UserRoleResponseSerializer
-from .services import assign_permission_to_role, assign_role_to_user, create_permission, create_role, get_all_permissions, get_all_roles, get_role_permissions, get_user_modules, get_user_permissions, get_user_roles, remove_permission_from_role,remove_role_from_user, update_role
+from .services import assign_permission_to_role, assign_role_to_user, create_permission, create_role, get_all_permissions, get_all_roles, get_role_permissions, get_user_modules, get_user_permissions, get_user_roles, get_users_by_permission, remove_permission_from_role,remove_role_from_user, update_role,get_users_by_role
 from django.core.exceptions import ValidationError
 
 User = get_user_model()
@@ -577,4 +577,82 @@ class CurrentUserModulesView(APIView):
             },
             status=status.HTTP_200_OK
         )
-    
+
+class RoleUsersView(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+        HasPermission,
+    ]
+
+    required_permission = "role.view"
+
+    def get(self, request, role_id):
+
+        role = get_object_or_404(
+            Role,
+            id=role_id,
+            is_active=True
+        )
+
+        users = get_users_by_role(
+            role
+        ).values(
+            "account_id",
+            "email",
+            "full_name",
+        )
+
+        return Response(
+            {
+                "message": "Role users fetched successfully.",
+                "data": {
+                    "role": {
+                        "id": role.id,
+                        "name": role.name,
+                    },
+                    "users": list(users),
+                }
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class PermissionUsersView(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+        HasPermission,
+    ]
+
+    required_permission = "permission.view"
+
+    def get(self, request):
+
+        permission_code = request.query_params.get(
+            "permission"
+        )
+
+        if not permission_code:
+            return Response(
+                {
+                    "message": "Permission code is required."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        users = get_users_by_permission(
+            permission_code
+        ).values(
+            "account_id",
+            "email",
+            "full_name",
+        )
+
+        return Response(
+            {
+                "message": "Eligible users fetched successfully.",
+                "data": list(users),
+            },
+            status=status.HTTP_200_OK
+        )

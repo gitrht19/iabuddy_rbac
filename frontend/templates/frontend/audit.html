@@ -2,48 +2,114 @@
 
 {% load static %}
 
-
 {% block title %}
     Audit | IABuddy RBAC
 {% endblock %}
-
 
 {% block page_title %}
     Audit
 {% endblock %}
 
-
 {% block content %}
 
 <div class="container-fluid">
+
+    <div
+        id="audit-message"
+        class="alert d-none"
+        role="alert">
+    </div>
+
 
     <div class="card shadow-sm border-0">
 
         <div class="card-body">
 
-            <div class="d-flex align-items-center gap-3">
-
-                <div>
-
-                    <i
-                        class="bi bi-clipboard-check fs-2 text-primary">
-                    </i>
-
-                </div>
-
+            <div
+                class="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
 
                     <h5 class="mb-1">
-                        Audit Module
+                        Audit
                     </h5>
 
                     <p class="text-muted mb-0">
-                        Audit functionality is available
-                        according to your assigned permissions.
+                        Manage audit activities.
                     </p>
 
                 </div>
+
+
+                <button
+                    type="button"
+                    id="create-audit-button"
+                    class="btn btn-primary">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Create Audit
+
+                </button>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-hover align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Title
+                            </th>
+
+                            <th>
+                                Assigned Auditor
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Created By
+                            </th>
+
+                            <th>
+                                Created At
+                            </th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="audit-table-body">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center text-muted py-4">
+
+                                Loading audits...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
 
             </div>
 
@@ -52,5 +118,204 @@
     </div>
 
 </div>
+
+
+<!-- Create / Update Audit Modal -->
+
+<div
+    class="modal fade"
+    id="auditModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="audit-modal-title">
+
+                    Create Audit
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div
+                    id="audit-modal-message"
+                    class="alert d-none"
+                    role="alert">
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="audit-title"
+                        class="form-label">
+
+                        Title
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="audit-title"
+                        class="form-control"
+                        maxlength="200"
+                        required>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="audit-description"
+                        class="form-label">
+
+                        Description
+
+                    </label>
+
+
+                    <textarea
+                        id="audit-description"
+                        class="form-control"
+                        rows="4">
+                    </textarea>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label
+                        for="audit-assigned-auditor"
+                        class="form-label">
+
+                        Assigned Auditor
+
+                    </label>
+
+
+                    <select
+                        id="audit-assigned-auditor"
+                        class="form-select">
+
+                        <option value="">
+                            Select Auditor
+                        </option>
+
+                    </select>
+
+
+                    <div class="form-text">
+
+                        Only users eligible for audit assignment
+                        are shown.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="save-audit-button"
+                    class="btn btn-primary">
+
+                    Create Audit
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Audit Details Modal -->
+
+<div
+    class="modal fade"
+    id="auditDetailModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Audit Details
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+            <div
+                class="modal-body"
+                id="audit-detail-content">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'frontend/js/audit.js' %}">
+</script>
 
 {% endblock %}
