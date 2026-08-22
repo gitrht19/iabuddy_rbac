@@ -752,7 +752,7 @@ const AuditManager = {
 
         const response =
             await this.apiRequest(
-                "/access-control/users/by-permission/?permission=audit.assign",
+                "/audit/auditors/",
                 {
                     method: "GET"
                 }

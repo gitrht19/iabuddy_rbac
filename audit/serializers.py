@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 
 from access_control.models import RolePermission
@@ -7,6 +8,34 @@ from .models import Audit
 
 
 User = get_user_model()
+
+
+class AuditorPrimaryKeyRelatedField(
+    serializers.PrimaryKeyRelatedField
+):
+
+    def to_internal_value(self, data):
+
+        try:
+
+            return User.objects.get(
+                account_id=data,
+                is_active=True
+            )
+
+        except User.DoesNotExist:
+
+            self.fail(
+                "does_not_exist",
+                pk_value=data
+            )
+
+        except (TypeError, ValueError):
+
+            self.fail(
+                "incorrect_type",
+                data_type=type(data).__name__
+            )
 
 
 def validate_auditor_user(user):
@@ -66,6 +95,14 @@ class CreateAuditSerializer(
     serializers.ModelSerializer
 ):
 
+    assigned_auditor = AuditorPrimaryKeyRelatedField(
+        queryset=User.objects.filter(
+            is_active=True
+        ),
+        allow_null=True,
+        required=False
+    )
+
     class Meta:
 
         model = Audit
@@ -96,6 +133,14 @@ class CreateAuditSerializer(
 class UpdateAuditSerializer(
     serializers.ModelSerializer
 ):
+
+    assigned_auditor = AuditorPrimaryKeyRelatedField(
+        queryset=User.objects.filter(
+            is_active=True
+        ),
+        allow_null=True,
+        required=False
+    )
 
     class Meta:
 

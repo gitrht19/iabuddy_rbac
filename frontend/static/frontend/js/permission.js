@@ -140,8 +140,7 @@ const PermissionManager = {
 
 
 /*
-    Load permissions for
-    authenticated users
+    Initialize Permissions Page
 */
 
 document.addEventListener(
@@ -157,12 +156,16 @@ document.addEventListener(
         }
 
 
-        await PermissionManager.load();
+        const permissionsLoaded =
+            await PermissionManager.load();
 
 
-        /*
-            Permissions page
-        */
+        if (!permissionsLoaded) {
+
+            return;
+
+        }
+
 
         const permissionsTableBody =
             document.getElementById(
@@ -178,12 +181,375 @@ document.addEventListener(
 
         }
 
+
+        initializeCreatePermission();
+
     }
 );
 
 
 /*
-    Load permissions from backend
+    Initialize Create Permission
+*/
+
+function initializeCreatePermission() {
+
+    const createButton =
+        document.getElementById(
+            "create-permission-button"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "save-permission-button"
+        );
+
+
+    if (!createButton) {
+
+        return;
+
+    }
+
+
+    /*
+        Hide create button when
+        user does not have permission
+    */
+
+    if (
+        !PermissionManager.has(
+            "permission.create"
+        )
+    ) {
+
+        createButton.classList.add(
+            "d-none"
+        );
+
+        return;
+
+    }
+
+
+    createButton.addEventListener(
+        "click",
+        function () {
+
+            openCreatePermissionModal();
+
+        }
+    );
+
+
+    if (saveButton) {
+
+        saveButton.addEventListener(
+            "click",
+            function () {
+
+                createPermission();
+
+            }
+        );
+
+    }
+
+}
+
+
+/*
+    Open Create Permission Modal
+*/
+
+function openCreatePermissionModal() {
+
+    const nameInput =
+        document.getElementById(
+            "permission-name"
+        );
+
+
+    const codeInput =
+        document.getElementById(
+            "permission-code"
+        );
+
+
+    const descriptionInput =
+        document.getElementById(
+            "permission-description"
+        );
+
+
+    const modalMessage =
+        document.getElementById(
+            "permission-modal-message"
+        );
+
+
+    if (nameInput) {
+
+        nameInput.value = "";
+
+    }
+
+
+    if (codeInput) {
+
+        codeInput.value = "";
+
+    }
+
+
+    if (descriptionInput) {
+
+        descriptionInput.value = "";
+
+    }
+
+
+    if (modalMessage) {
+
+        modalMessage.className =
+            "alert d-none";
+
+        modalMessage.textContent =
+            "";
+
+    }
+
+
+    const modalElement =
+        document.getElementById(
+            "permissionModal"
+        );
+
+
+    if (!modalElement) {
+
+        return;
+
+    }
+
+
+    const modal =
+        bootstrap.Modal.getOrCreateInstance(
+            modalElement
+        );
+
+
+    modal.show();
+
+}
+
+
+/*
+    Create Permission
+*/
+
+async function createPermission() {
+
+    const nameInput =
+        document.getElementById(
+            "permission-name"
+        );
+
+
+    const codeInput =
+        document.getElementById(
+            "permission-code"
+        );
+
+
+    const descriptionInput =
+        document.getElementById(
+            "permission-description"
+        );
+
+
+    if (
+        !nameInput ||
+        !codeInput ||
+        !descriptionInput
+    ) {
+
+        return;
+
+    }
+
+
+    const name =
+        nameInput.value.trim();
+
+
+    const code =
+        codeInput.value.trim();
+
+
+    const description =
+        descriptionInput.value.trim();
+
+
+    if (!name) {
+
+        showPermissionModalMessage(
+            "Permission name is required.",
+            "danger"
+        );
+
+        return;
+
+    }
+
+
+    if (!code) {
+
+        showPermissionModalMessage(
+            "Permission code is required.",
+            "danger"
+        );
+
+        return;
+
+    }
+
+
+    const accessToken =
+        localStorage.getItem(
+            "access_token"
+        );
+
+
+    if (!accessToken) {
+
+        clearAuthentication();
+
+        window.location.replace(
+            "/login/"
+        );
+
+        return;
+
+    }
+
+
+    const saveButton =
+        document.getElementById(
+            "save-permission-button"
+        );
+
+
+    if (saveButton) {
+
+        saveButton.disabled = true;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/access-control/create/permissions/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`,
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            {
+                                name: name,
+                                code: code,
+                                description: description
+                            }
+                        )
+                }
+            );
+
+
+        if (
+            response.status === 401
+        ) {
+
+            clearAuthentication();
+
+            window.location.replace(
+                "/login/"
+            );
+
+            return;
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            showPermissionModalMessage(
+                result.message ||
+                "Unable to create permission.",
+                "danger"
+            );
+
+            return;
+
+        }
+
+
+        hidePermissionModal();
+
+
+        showPermissionMessage(
+            result.message ||
+            "Permission created successfully.",
+            "success"
+        );
+
+
+        await loadPermissions();
+
+
+    } catch (error) {
+
+        console.error(
+            "Create permission error:",
+            error
+        );
+
+
+        showPermissionModalMessage(
+            "Unable to create permission.",
+            "danger"
+        );
+
+
+    } finally {
+
+        if (saveButton) {
+
+            saveButton.disabled = false;
+
+        }
+
+    }
+
+}
+
+
+/*
+    Load Permissions From Backend
 */
 
 async function loadPermissions() {
@@ -321,7 +687,7 @@ async function loadPermissions() {
 
 
 /*
-    Render permissions dynamically
+    Render Permissions Dynamically
 */
 
 function renderPermissions(
@@ -377,6 +743,7 @@ function renderPermissions(
                     "td"
                 );
 
+
             nameCell.textContent =
                 permission.name;
 
@@ -392,8 +759,10 @@ function renderPermissions(
                     "code"
                 );
 
+
             code.textContent =
                 permission.code;
+
 
             codeCell.appendChild(
                 code
@@ -405,6 +774,7 @@ function renderPermissions(
                     "td"
                 );
 
+
             descriptionCell.textContent =
                 permission.description ||
                 "—";
@@ -414,9 +784,11 @@ function renderPermissions(
                 nameCell
             );
 
+
             row.appendChild(
                 codeCell
             );
+
 
             row.appendChild(
                 descriptionCell
@@ -429,5 +801,125 @@ function renderPermissions(
 
         }
     );
+
+}
+
+
+/*
+    Show Permission Page Message
+*/
+
+function showPermissionMessage(
+    message,
+    type
+) {
+
+    const element =
+        document.getElementById(
+            "permissions-message"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.className =
+        `alert alert-${type}`;
+
+
+    element.textContent =
+        message;
+
+
+    element.classList.remove(
+        "d-none"
+    );
+
+
+    setTimeout(
+        function () {
+
+            element.classList.add(
+                "d-none"
+            );
+
+        },
+        4000
+    );
+
+}
+
+
+/*
+    Show Modal Message
+*/
+
+function showPermissionModalMessage(
+    message,
+    type
+) {
+
+    const element =
+        document.getElementById(
+            "permission-modal-message"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.className =
+        `alert alert-${type}`;
+
+
+    element.textContent =
+        message;
+
+
+    element.classList.remove(
+        "d-none"
+    );
+
+}
+
+
+/*
+    Hide Permission Modal
+*/
+
+function hidePermissionModal() {
+
+    const modalElement =
+        document.getElementById(
+            "permissionModal"
+        );
+
+
+    if (!modalElement) {
+
+        return;
+
+    }
+
+
+    const modal =
+        bootstrap.Modal.getInstance(
+            modalElement
+        );
+
+
+    if (modal) {
+
+        modal.hide();
+
+    }
 
 }
